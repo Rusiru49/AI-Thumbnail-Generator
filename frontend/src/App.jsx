@@ -1,28 +1,28 @@
-import GetInTouch from "./sections/get-in-touch";
-import OurTestimonials from "./sections/our-testimonials";
-import SubscribeNewsletter from "./sections/subscribe-newsletter";
-import TrustedCompanies from "./sections/trusted-companies";
 import Footer from "./components/footer";
 import LenisScroll from "./components/lenis-scroll";
 import Navbar from "./components/navbar";
-import AboutOurApps from "./sections/about-our-apps";
-import HeroSection from "./sections/hero-section";
-import OurLatestCreation from "./sections/our-latest-creation";
+
+import { Routes, Route } from "react-router-dom"; // ✅ FIX
+
+import HomePage from "./pages/HomePage";
+import Generate from "./pages/Generate";
+import MyGenerations from "./pages/MyGenerations";
+import YtPreview from "./pages/YtPreview";
+import Login from "./components/Login";
 
 export default function Page() {
     return (
         <>
             <LenisScroll />
             <Navbar />
-            <main className="px-6 md:px-16 lg:px-24 xl:px-32">
-                <HeroSection />
-                <OurLatestCreation />
-                <AboutOurApps />
-                <OurTestimonials />
-                <TrustedCompanies />
-                <GetInTouch />
-                <SubscribeNewsletter />
-            </main>
+
+            <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/generate" element={<Generate />} />
+                    <Route path="/myGenerations" element={<MyGenerations />} />
+                    <Route path="/ytPreview" element={<YtPreview />} />
+                    <Route path="/login" element={<Login />} />
+                </Routes>
             <Footer />
         </>
     );

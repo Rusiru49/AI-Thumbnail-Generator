@@ -51,12 +51,33 @@ export default function TiltedImage({ rotateAmplitude = 3, }) {
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 320, damping: 70, mass: 1 }}
         >
-            <motion.div className="relative [transform-style:preserve-3d] w-full max-w-4xl" style={{ rotateX, rotateY }} >
-                <img src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/hero/hero-section-showcase-2.png"
-                    className="w-full rounded-[15px] will-change-transform [transform:translateZ(0)]"
-                    alt="hero section showcase"
-                />
+            <motion.div
+                className="
+                    relative 
+                    w-full 
+                    max-w-4xl 
+                    rounded-2xl
+                    bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent
+                    p-[2px]
+                    shadow-[0_25px_80px_-15px_rgba(99,102,241,0.35)]
+                    [transform-style:preserve-3d]
+                "
+                style={{ rotateX, rotateY }}
+            >
+            <motion.img
+                src="/assets/hero_img.png"
+                alt="hero section showcase"
+                className="
+                    w-full
+                    rounded-xl
+                    border border-white/10
+                    bg-slate-900
+                    will-change-transform
+                    [transform:translateZ(0)]
+                "
+            />
             </motion.div>
+
         </motion.figure>
     );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import SoftBackdrop from "./SoftBackdrop";
 
 export default function Login() {
     const [state, setState] = React.useState("login");
@@ -11,7 +12,7 @@ export default function Login() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e) => {
@@ -20,114 +21,69 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center relative bg-[#0b0b12] px-4">
-            {/* Form Card */}
+        <div
+            className="
+                min-h-screen w-full flex items-center justify-center relative
+                bg-gradient-to-br from-[#0f1020] via-[#0b0b18] to-[#07070f]
+                px-4 overflow-hidden
+            "
+        >
+            <SoftBackdrop />
+
+            {/* Card */}
             <form
                 onSubmit={handleSubmit}
-                className="w-full max-w-md text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-8"
+                className="
+                    w-full max-w-md px-8
+                    bg-white/8 backdrop-blur-xl
+                    border border-white/15
+                    rounded-2xl
+                    shadow-[0_0_60px_rgba(55,42,172,0.25)]
+                    text-center
+                "
             >
-                <h1 className="text-white text-3xl mt-10 font-medium">
+                <h1 className="text-gray-50 text-3xl mt-10 font-semibold">
                     {state === "login" ? "Login" : "Sign up"}
                 </h1>
 
                 <p className="text-gray-400 text-sm mt-2">
-                    Please sign in to continue
+                    Generate stunning AI thumbnails effortlessly
                 </p>
 
-                {/* Name (Register only) */}
+                {/* Name */}
                 {state !== "login" && (
-                    <div className="flex items-center mt-6 w-full bg-white/5 ring-2 ring-white/10 focus-within:ring-indigo-500/60 h-12 rounded-full pl-6 gap-3 transition">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            className="text-white/60"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <circle cx="12" cy="8" r="5" />
-                            <path d="M20 21a8 8 0 0 0-16 0" />
-                        </svg>
-
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            className="w-full bg-transparent text-white placeholder-white/60 outline-none"
-                        />
-                    </div>
+                    <FloatingInput
+                        label="Name"
+                        name="name"
+                        type="text"
+                        value={formData.name}
+                        onChange={handleChange}
+                    />
                 )}
 
                 {/* Email */}
-                <div className="flex items-center w-full mt-4 bg-white/5 ring-2 ring-white/10 focus-within:ring-indigo-500/60 h-12 rounded-full pl-6 gap-3 transition">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        className="text-white/75"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
-                        <rect x="2" y="4" width="20" height="16" rx="2" />
-                    </svg>
-
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email address"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full bg-transparent text-white placeholder-white/60 outline-none"
-                    />
-                </div>
+                <FloatingInput
+                    label="Email address"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                />
 
                 {/* Password */}
-                <div className="flex items-center mt-4 w-full bg-white/5 ring-2 ring-white/10 focus-within:ring-indigo-500/60 h-12 rounded-full pl-6 gap-3 transition">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        className="text-white/75"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
+                <FloatingInput
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                />
 
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                        className="w-full bg-transparent text-white placeholder-white/60 outline-none"
-                    />
-                </div>
-
-                {/* Forgot Password */}
+                {/* Forgot */}
                 <div className="mt-4 text-left">
                     <button
                         type="button"
-                        className="text-sm text-indigo-400 hover:underline"
+                        className="text-sm text-indigo-400 hover:text-indigo-300 transition cursor-pointer"
                     >
                         Forgot password?
                     </button>
@@ -136,7 +92,13 @@ export default function Login() {
                 {/* Submit */}
                 <button
                     type="submit"
-                    className="mt-4 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition"
+                    className="
+                        mt-6 w-full h-11 rounded-full
+                        bg-indigo-600 hover:bg-indigo-700
+                        text-white font-medium
+                        transition active:scale-95
+                        cursor-pointer
+                    "
                 >
                     {state === "login" ? "Login" : "Sign up"}
                 </button>
@@ -144,26 +106,62 @@ export default function Login() {
                 {/* Switch */}
                 <p
                     onClick={() =>
-                        setState((prev) =>
-                            prev === "login" ? "register" : "login"
-                        )
+                        setState(prev => prev === "login" ? "register" : "login")
                     }
                     className="text-gray-400 text-sm mt-4 mb-10 cursor-pointer"
                 >
                     {state === "login"
                         ? "Don't have an account?"
                         : "Already have an account?"}
-                    <span className="text-indigo-400 hover:underline ml-1">
+                    <span className="text-indigo-400 hover:text-indigo-300 ml-1">
                         Click here
                     </span>
                 </p>
             </form>
+        </div>
+    );
+}
 
-            {/* Soft Background Glow */}
-            <div className="fixed inset-0 -z-10 pointer-events-none">
-                <div className="absolute left-1/2 top-20 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-tr from-indigo-800/40 to-transparent rounded-full blur-3xl" />
-                <div className="absolute right-12 bottom-10 w-[300px] h-[180px] bg-gradient-to-bl from-indigo-700/40 to-transparent rounded-full blur-2xl" />
-            </div>
+/* ---------------- Floating Input Component ---------------- */
+
+function FloatingInput({ label, name, type, value, onChange }) {
+    return (
+        <div
+            className="
+                relative mt-4 w-full h-12 rounded-full
+                bg-white/6 border border-white/15
+                focus-within:border-indigo-500/70
+                focus-within:shadow-[0_0_25px_rgba(99,102,241,0.45)]
+                transition-all
+            "
+        >
+            <input
+                type={type}
+                name={name}
+                value={value}
+                onChange={onChange}
+                required
+                className="
+                    peer w-full h-full bg-transparent
+                    px-6 pt-4 text-white
+                    outline-none
+                    caret-indigo-400
+                    cursor-pointer
+                "
+            />
+
+            <label
+                className="
+                    absolute left-6 top-1/2 -translate-y-1/2
+                    text-white/60 text-sm
+                    transition-all duration-300
+                    pointer-events-none
+                    peer-focus:top-2 peer-focus:text-xs peer-focus:text-indigo-400
+                    peer-valid:top-2 peer-valid:text-xs peer-valid:text-indigo-400
+                "
+            >
+                {label}
+            </label>
         </div>
     );
 }

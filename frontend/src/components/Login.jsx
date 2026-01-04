@@ -21,32 +21,16 @@ export default function Login() {
     };
 
     return (
-        <div
-            className="
-                min-h-screen w-full flex items-center justify-center relative
-                bg-gradient-to-br from-[#0f1020] via-[#0b0b18] to-[#07070f]
-                px-4 overflow-hidden
-            "
-        >
+        <div className="relative min-h-screen w-full flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-indigo-00 to-black-600">
             <SoftBackdrop />
 
             {/* Card */}
-            <form
-                onSubmit={handleSubmit}
-                className="
-                    w-full max-w-md px-8
-                    bg-white/8 backdrop-blur-xl
-                    border border-white/15
-                    rounded-2xl
-                    shadow-[0_0_60px_rgba(55,42,172,0.25)]
-                    text-center
-                "
-            >
-                <h1 className="text-gray-50 text-3xl mt-10 font-semibold">
+            <div className="w-full max-w-md px-8 py-10 bg-gradient-to-br from-indigo-950/60 to-black/60 backdrop-blur-xl border border-indigo-500/20 rounded-2xl shadow-lg text-center">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-indigo-600 bg-clip-text text-transparent">
                     {state === "login" ? "Login" : "Sign up"}
                 </h1>
 
-                <p className="text-gray-400 text-sm mt-2">
+                <p className="text-gray-400 text-sm mt-6 mb-8">
                     Generate stunning AI thumbnails effortlessly
                 </p>
 
@@ -83,7 +67,7 @@ export default function Login() {
                 <div className="mt-4 text-left">
                     <button
                         type="button"
-                        className="text-sm text-indigo-400 hover:text-indigo-300 transition cursor-pointer"
+                        className="text-sm text-indigo-400 hover:text-indigo-500 transition cursor-pointer"
                     >
                         Forgot password?
                     </button>
@@ -91,14 +75,8 @@ export default function Login() {
 
                 {/* Submit */}
                 <button
-                    type="submit"
-                    className="
-                        mt-6 w-full h-11 rounded-full
-                        bg-indigo-600 hover:bg-indigo-700
-                        text-white font-medium
-                        transition active:scale-95
-                        cursor-pointer
-                    "
+                    onClick={handleSubmit}
+                    className="mt-6 w-full h-11 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition active:scale-95 cursor-pointer"
                 >
                     {state === "login" ? "Login" : "Sign up"}
                 </button>
@@ -108,58 +86,34 @@ export default function Login() {
                     onClick={() =>
                         setState(prev => prev === "login" ? "register" : "login")
                     }
-                    className="text-gray-400 text-sm mt-4 mb-10 cursor-pointer"
+                    className="text-gray-400 text-sm mt-6 mb-10 cursor-pointer"
                 >
                     {state === "login"
                         ? "Don't have an account?"
                         : "Already have an account?"}
-                    <span className="text-indigo-400 hover:text-indigo-300 ml-1">
+                    <span className="text-indigo-400 hover:text-indigo-500 ml-1">
                         Click here
                     </span>
                 </p>
-            </form>
+            </div>
         </div>
     );
 }
 
 /* ---------------- Floating Input Component ---------------- */
-
 function FloatingInput({ label, name, type, value, onChange }) {
     return (
-        <div
-            className="
-                relative mt-4 w-full h-12 rounded-full
-                bg-white/6 border border-white/15
-                focus-within:border-indigo-500/70
-                focus-within:shadow-[0_0_25px_rgba(99,102,241,0.45)]
-                transition-all
-            "
-        >
+        <div className="relative mt-6 w-full h-14 rounded-full bg-indigo-80/50 border border-indigo-500/30 focus-within:border-indigo-400 focus-within:shadow-[0_0_25px_rgba(99,102,241,0.45)] transition-all">
             <input
                 type={type}
                 name={name}
                 value={value}
                 onChange={onChange}
                 required
-                className="
-                    peer w-full h-full bg-transparent
-                    px-6 pt-4 text-white
-                    outline-none
-                    caret-indigo-400
-                    cursor-pointer
-                "
+                className="peer w-full h-full bg-transparent px-6 pt-4 text-white outline-none caret-indigo-400 cursor-pointer"
             />
 
-            <label
-                className="
-                    absolute left-6 top-1/2 -translate-y-1/2
-                    text-white/60 text-sm
-                    transition-all duration-300
-                    pointer-events-none
-                    peer-focus:top-2 peer-focus:text-xs peer-focus:text-indigo-400
-                    peer-valid:top-2 peer-valid:text-xs peer-valid:text-indigo-400
-                "
-            >
+            <label className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-sm transition-all duration-300 pointer-events-none peer-focus:top-2 peer-focus:text-xs peer-focus:text-indigo-400 peer-valid:top-2 peer-valid:text-xs peer-valid:text-indigo-400">
                 {label}
             </label>
         </div>

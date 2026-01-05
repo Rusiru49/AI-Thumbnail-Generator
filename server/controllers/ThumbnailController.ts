@@ -8,6 +8,7 @@ import {
 import ai from '../config/ai.js';
 import path from 'node:path';
 import fs from 'fs'
+import {v2 as cloudinary} from 'cloudinary'
 
 const stylePrompts = {
     'Bold & Graphic':
@@ -133,9 +134,20 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 
         fs.writeFileSync(filepath, finalBuffer!);
 
-    } catch (error) {
+        const uploadResult = await cloudinary.uploader.upload(filepath, {
+            resource_type: 'image',
+        })
+        thumbnail.image_url = uploadResult.url;
+        thumbnail.isGenerating = false;
+        await thumbnail.save();
+
+        res.status(200).json({ message: 'Thumbnail generated successfully', thumbnail });
+
+        fs.unlinkSync(filepath);
+
+    } catch (error: any) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error', error });
+        res.status(500).json({ message: error.message });
     }
 };
 

@@ -31,3 +31,7 @@ const ThumbnailSchema = new mongoose.Schema<IThumbnail>({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });
+
+const Thumbnail = mongoose.model<IThumbnail>('Thumbnail', ThumbnailSchema);
+
+export default Thumbnail;

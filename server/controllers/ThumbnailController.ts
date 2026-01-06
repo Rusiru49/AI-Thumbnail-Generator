@@ -62,13 +62,13 @@ export const generateThumbnail = async (req: Request, res: Response) => {
         const model = 'gemini-3-pro-image-preview';
 
         const generateConfig: GenerateContentConfig = {
-            maxOutputTokens: 256,
-            temperature: 0.7,
-            topP: 0.8,
+            maxOutputTokens: 32768 ,
+            temperature: 1,
+            topP: 0.95,
             responseModalities: ['IMAGE'],
             imageConfig: {
                 aspectRatio: aspect_ratio || '16:9',
-                imageSize: '1024x1024'
+                imageSize: '1K'
             },
             safetySettings: [
                 {

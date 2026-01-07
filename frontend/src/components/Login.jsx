@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SoftBackdrop from "./SoftBackdrop";
+import { useAuth } from "../context/AuthContext"
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
     const [state, setState] = React.useState("login");
+    const {user, login, signUp} = useAuth();
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = React.useState({
         name: "",
@@ -17,8 +22,20 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (state === "login") {
+            login(formData)
+        }else {
+            signUp(formData)
+        }
         console.log(state, formData);
     };
+
+    useEffect(() => {
+        if (user) {
+            navigate("/");
+        }
+    }, [user])
 
     return (
         <div className="relative min-h-screen w-full flex items-center justify-center px-4 overflow-hidden bg-gradient-to-br from-indigo-00 to-black-600">

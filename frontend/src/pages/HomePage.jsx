@@ -1,4 +1,4 @@
-import HeroSection from "../sections/hero-section";
+import HeroSection from "../sections/hero-section"
 import AboutOurApps from "../sections/about-our-apps";
 import GetInTouch from "../sections/get-in-touch";
 import TestimonialSection from "../sections/our-testimonials";

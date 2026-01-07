@@ -1,67 +1,69 @@
-import { useState } from 'react';
 import { SparkleIcon, SquareIcon, PenToolIcon, ImageIcon, CpuIcon } from 'lucide-react';
+import { ThumbnailStyle } from '../assets/assets';
 
-export default function StyleSelector() {
-  const [style, setStyle] = useState('Bold & Graphic');
-  const [open, setOpen] = useState(false);
-
+export default function StyleSelector({value, onChange, isOpen, setIsOpen}: {
+  value: ThumbnailStyle; 
+  onChange: (style: ThumbnailStyle) => void; 
+  isOpen: boolean; 
+  setIsOpen: (open: boolean) => void;
+}) {
   const options = [
     {
-      label: 'Bold & Graphic',
+      label: 'Bold & Graphic' as ThumbnailStyle,
       icon: <SparkleIcon className="w-4 h-4 mr-2" />,
       description: 'High contrast, bold typography, striking visuals',
     },
     {
-      label: 'Minimal & Clean',
+      label: 'Minimal & Clean' as ThumbnailStyle,
       icon: <SquareIcon className="w-4 h-4 mr-2" />,
       description: 'Simple layouts, lots of whitespace, clean aesthetics',
     },
     {
-      label: 'Cinematic',
+      label: 'Cinematic' as ThumbnailStyle,
       icon: <ImageIcon className="w-4 h-4 mr-2" />,
       description: 'Dramatic visuals, widescreen vibes, storytelling style',
     },
     {
-      label: 'Illustrative',
+      label: 'Illustrative' as ThumbnailStyle,
       icon: <PenToolIcon className="w-4 h-4 mr-2" />,
       description: 'Hand-drawn or vector illustrations, artistic flair',
     },
     {
-      label: 'Modern Tech',
+      label: 'Modern Tech' as ThumbnailStyle,
       icon: <CpuIcon className="w-4 h-4 mr-2" />,
       description: 'Futuristic designs, sleek interfaces, tech-inspired',
     },
   ];
 
-  const selectedOption = options.find(o => o.label === style);
+  const selectedOption = options.find(o => o.label === value);
 
   return (
     <div className="relative w-64">
       <label className="block text-sm mb-2 text-gray-300">Thumbnail Style</label>
 
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-black/40 border border-indigo-500/30 text-white outline-none focus:ring-2 focus:ring-indigo-500"
       >
         <span className="flex items-center">
           {selectedOption?.icon}
-          {style}
+          {value}
         </span>
         <span className="ml-2">▼</span>
       </button>
 
-      {open && (
+      {isOpen && (
         <div className="absolute z-10 mt-1 w-full bg-black/90 border border-indigo-500/30 rounded-lg shadow-lg">
           {options.map((option) => (
             <button
               key={option.label}
               type="button"
               onClick={() => {
-                setStyle(option.label);
-                setOpen(false);
+                onChange(option.label);
+                setIsOpen(false);
               }}
               className={`w-full flex items-center px-4 py-3 text-left hover:bg-indigo-500/20 transition ${
-                style === option.label ? 'bg-indigo-500/20' : ''
+                value === option.label ? 'bg-indigo-500/20' : ''
               }`}
             >
               {option.icon}
@@ -71,7 +73,6 @@ export default function StyleSelector() {
         </div>
       )}
 
-      {/* Show description of the selected option */}
       <p className="text-xs text-gray-400 mt-1">{selectedOption?.description}</p>
     </div>
   );

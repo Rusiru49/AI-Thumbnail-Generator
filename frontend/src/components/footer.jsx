@@ -13,15 +13,7 @@ export default function Footer() {
                 
                 {/* Brand */}
                 <div className="sm:col-span-2 lg:col-span-1">
-                    <a href="/">
-                        <img
-                            className="h-9 w-auto"
-                            src="/assets/logo.svg"
-                            width={138}
-                            height={36}
-                            alt="AI Thumbnail Generator logo"
-                        />
-                    </a>
+                    <h1 className="text-2xl font-bold text-white mb-4">PictoAI</h1>
                     <p className="text-sm/7 mt-6">
                         An AI-powered thumbnail generator that helps creators design
                         eye-catching thumbnails in seconds — no design skills required.

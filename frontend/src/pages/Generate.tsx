@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import SoftBackdrop from "../components/SoftBackdrop";
 import AspectRatioSelecter from "../components/AspectRatioSelecter";
 import StyleSelector from "../components/StyleSelector";
 import ColorSchemeSelector from "../components/ColorSchemeSelector";
 import PreviewPanel from "../components/PreviewPanel";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
+import api from "../configs/api";
+import {type IThumbnail, type AspectRatio, colorSchemes, type ThumbnailStyle} from "../assets/assets"
+
 
 export default function Generate() {
   const { id } = useParams();
+  const { pathname } = useLocation();
   const location = useLocation();
+
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   // ✅ ONLY read data if navigated from MyGenerations
   const generationData = location.state?.generation || null;
@@ -16,13 +25,13 @@ export default function Generate() {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [additionalInfo, setAdditionalInfo] = useState("");
-  const [aspectRatio, setAspectRatio] = useState("16:9");
-  const [style, setStyle] = useState("Bold & Graphic");
+  const [aspectRatio, setAspectRatio] = useState<AspectRatio>("16:9");
+  const [style, setStyle] = useState<ThumbnailStyle>("Bold & Graphic");
   const [styleDropdownOpen, setStyleDropdownOpen] = useState(false);
-  const [colorScheme, setColorScheme] = useState("Vibrant");
+  const [colorScheme, setColorScheme] = useState<string>(colorSchemes[0].id);
 
   // ✅ Thumbnail starts EMPTY
-  const [thumbnail, setThumbnail] = useState(null);
+  const [thumbnail, setThumbnail] = useState<IThumbnail | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
   // 🔥 Load data ONLY when coming from MyGenerations
@@ -34,29 +43,81 @@ export default function Generate() {
     }
   }, [generationData]);
 
-  const generateThumbnail = async () => {
-    if (!title.trim()) return alert("Please enter a title!");
-    setLoading(true);
-
+  const fetchThumbnail = async () => {
     try {
-      await new Promise((res) => setTimeout(res, 1500));
-
-      const fakeThumbnail = `https://via.placeholder.com/512x512.png?text=${encodeURIComponent(
-        title
-      )}`;
-      setThumbnail(fakeThumbnail);
+      const { data } = await api.get(`/api/user/thumbnail/${id}`);
+      setThumbnail(data.thumbnail);
+      setLoading(!data?.thumbnail?.image_url);
+      setAdditionalInfo(data?.thumbnail?.user_prompt || "");
+      setTitle(data?.thumbnail?.title || "");
+      setColorScheme(data?.thumbnail?.color_scheme || colorSchemes[0].id);
+      setAspectRatio(data?.thumbnail?.aspect_ratio || "16:9");
+      setStyle(data?.thumbnail?.style || "Bold & Graphic");
       setIsEditMode(true);
-    } catch (err) {
-      console.error(err);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Failed to fetch thumbnail");
+    }
+  };
+
+  // ✅ Fetch thumbnail when ID exists and user is logged in
+  useEffect(() => {
+    if (id && isLoggedIn && !generationData) {
+      fetchThumbnail();
+    }
+  }, [id, isLoggedIn]);
+
+  // ✅ Poll for thumbnail updates when loading
+  useEffect(() => {
+    if (id && loading && isLoggedIn) {
+      const interval = setInterval(() => {
+        fetchThumbnail();
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [id, loading, isLoggedIn]);
+
+  // ✅ Clear thumbnail when navigating away from detail view
+  useEffect(() => {
+    if (!id && thumbnail) {
+      setThumbnail(null);
+      setIsEditMode(false);
+    }
+  }, [pathname, id]);
+
+  const handleGenerate = async () => {
+    if (!isLoggedIn) return toast.error("Please log in to generate a thumbnail!");
+    if (!title.trim()) return alert("Please enter a title!");
+    
+    setLoading(true);
+    
+    try {
+      const api_payload = {
+        title,
+        prompt: additionalInfo,
+        aspect_ratio: aspectRatio,
+        color_scheme: colorScheme,
+        text_overlay: true,
+      };
+
+      const { data } = await api.post("/api/thumbnail/generate", api_payload);
+
+      if (data.thumbnail) {
+        navigate('/generate/' + data.thumbnail._id);
+        toast.success(data.message);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to generate thumbnail");
     } finally {
       setLoading(false);
     }
   };
 
   const downloadThumbnail = () => {
-    if (!thumbnail) return;
+    if (!thumbnail?.image_url) return;
     const link = document.createElement("a");
-    link.href = thumbnail;
+    link.href = thumbnail.image_url;
     link.download = `${title || "thumbnail"}.png`;
     link.click();
   };
@@ -71,7 +132,7 @@ export default function Generate() {
             {isEditMode ? "Edit Thumbnail" : "Generate Thumbnails"}
           </h1>
 
-          {/* ✅ Edit mode banner ONLY when coming from MyGenerations */}
+          {/* ✅ Edit mode banner ONLY when in edit mode */}
           {isEditMode && (
             <div className="mb-6 px-4 py-2 rounded-lg
               bg-indigo-600/20 border border-indigo-500/30
@@ -108,21 +169,24 @@ export default function Generate() {
               />
 
               <ColorSchemeSelector
-                colorScheme={colorScheme}
-                setColorScheme={setColorScheme}
+                value={colorScheme}
+                onChange={setColorScheme}
               />
 
               <textarea
                 rows={4}
                 value={additionalInfo}
                 onChange={(e) => setAdditionalInfo(e.target.value)}
+                placeholder="Additional details (optional)"
                 className="w-full rounded-lg bg-black/40 border border-indigo-500/30 px-4 py-3"
               />
 
               <button
-                onClick={generateThumbnail}
+                onClick={handleGenerate}
+                disabled={loading}
                 className="w-full py-3 rounded-xl font-semibold
-                bg-gradient-to-r from-indigo-500 to-purple-600"
+                bg-gradient-to-r from-indigo-500 to-purple-600
+                disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading
                   ? "Generating..."
@@ -131,7 +195,7 @@ export default function Generate() {
                   : "Generate Thumbnail"}
               </button>
 
-              {thumbnail && (
+              {thumbnail?.image_url && (
                 <button
                   onClick={downloadThumbnail}
                   className="w-full py-3 rounded-xl font-semibold
@@ -143,11 +207,16 @@ export default function Generate() {
             </div>
 
             {/* RIGHT PANEL */}
-            <PreviewPanel
-              thumbnail={thumbnail}
-              isLoading={loading}
-              aspectRatio={aspectRatio}
-            />
+            <div>
+              <div className="p-6 rounded-2xl bg-white/8 border-indigo/10 shadow-xl">
+              <h1 className="text-lg font-semibold text-indigo-400 mb-4">Preview</h1>
+              <PreviewPanel
+                thumbnail={thumbnail}
+                isLoading={loading}
+                aspectRatio="{aspectRatio}"
+               />
+              </div>
+            </div>
           </div>
         </main>
       </div>

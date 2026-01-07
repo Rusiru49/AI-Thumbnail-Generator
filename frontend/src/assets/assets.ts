@@ -1,4 +1,4 @@
-import thumb_1 from "./thumb_1.jpg";
+import thumb_1 from "./thumb_1.jpg"
 import thumb_2 from "./thumb_2.jpg";
 import thumb_3 from "./thumb_3.jpg";
 import thumb_4 from "./thumb_4.jpg";

@@ -28,6 +28,7 @@ export default function Page() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/generate" element={<Generate />} />
+                <Route path="/generate/:id" element={<Generate />} />
                 <Route path="/myGenerations" element={<MyGenerations />} />
                 <Route path="/ytPreview" element={<YtPreview />} />
                 <Route path="/login" element={<Login />} />

@@ -8,7 +8,7 @@ import PreviewPanel from "../components/PreviewPanel";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import api from "../configs/api";
-import {type IThumbnail, type AspectRatio, colorSchemes, type ThumbnailStyle} from "../assets/assets"
+import {type IThumbnail, type AspectRatio, colorSchemes, type ThumbnailStyle, dummyThumbnails} from "../assets/assets"
 
 
 export default function Generate() {
@@ -44,19 +44,16 @@ export default function Generate() {
   }, [generationData]);
 
   const fetchThumbnail = async () => {
-    try {
-      const { data } = await api.get(`/api/user/thumbnail/${id}`);
-      setThumbnail(data.thumbnail);
-      setLoading(!data?.thumbnail?.image_url);
-      setAdditionalInfo(data?.thumbnail?.user_prompt || "");
-      setTitle(data?.thumbnail?.title || "");
-      setColorScheme(data?.thumbnail?.color_scheme || colorSchemes[0].id);
-      setAspectRatio(data?.thumbnail?.aspect_ratio || "16:9");
-      setStyle(data?.thumbnail?.style || "Bold & Graphic");
-      setIsEditMode(true);
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.response?.data?.message || "Failed to fetch thumbnail");
+    if(id) {
+      const thumbnail: any = dummyThumbnails.find((thumbnail)=>thumbnail._id === id);
+      setThumbnail(thumbnail);
+
+      setAdditionalInfo(thumbnail.user_prompt);
+      setTitle(thumbnail.title);
+      setColorScheme(thumbnail.color_scheme);
+      setAspectRatio(thumbnail.aspect_ratio);
+      setStyle(thumbnail.style);
+      setLoading(false)
     }
   };
 
@@ -209,12 +206,12 @@ export default function Generate() {
             {/* RIGHT PANEL */}
             <div>
               <div className="p-6 rounded-2xl bg-white/8 border-indigo/10 shadow-xl">
-              <h1 className="text-lg font-semibold text-indigo-400 mb-4">Preview</h1>
-              <PreviewPanel
-                thumbnail={thumbnail}
-                isLoading={loading}
-                aspectRatio="{aspectRatio}"
-               />
+                <h1 className="text-lg font-semibold text-indigo-400 mb-4">Preview</h1>
+                  <PreviewPanel
+                    thumbnail={thumbnail}
+                    isLoading={loading}
+                    aspectRatio={aspectRatio}
+                  />
               </div>
             </div>
           </div>

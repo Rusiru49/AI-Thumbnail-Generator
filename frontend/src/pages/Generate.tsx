@@ -44,16 +44,19 @@ export default function Generate() {
   }, [generationData]);
 
   const fetchThumbnail = async () => {
-    if(id) {
-      const thumbnail: any = dummyThumbnails.find((thumbnail)=>thumbnail._id === id);
-      setThumbnail(thumbnail);
+    try {
+      const { data } = await api.get(`/api/user/thumbnail/${id}`);
+      setThumbnail(data?.thumbnail as IThumbnail);
+      setLoading(!data?.thumbnail?.image_url)
+      setAdditionalInfo(data?.thumbnail?.user_prompt)
+      setTitle(data?.thumbnail?.title)
+      setColorScheme(data?.thumbnail?.color_scheme)
+      setAspectRatio(data?.thumbnail?.aspect_ratio)
+      setStyle(data?.thumbnail?.style)
 
-      setAdditionalInfo(thumbnail.user_prompt);
-      setTitle(thumbnail.title);
-      setColorScheme(thumbnail.color_scheme);
-      setAspectRatio(thumbnail.aspect_ratio);
-      setStyle(thumbnail.style);
-      setLoading(false)
+    }catch (error: any) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || "Error fetching thumbnail");
     }
   };
 
@@ -92,6 +95,7 @@ export default function Generate() {
       const api_payload = {
         title,
         prompt: additionalInfo,
+        style,
         aspect_ratio: aspectRatio,
         color_scheme: colorScheme,
         text_overlay: true,

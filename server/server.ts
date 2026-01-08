@@ -27,7 +27,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'secret',
+    secret: process.env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -45,7 +45,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api/auth', AuthRouter);
 
-app.use('/api/thumbnails', ThumbnailRoutes)
+app.use('/api/thumbnail', ThumbnailRoutes)
 
 app.use('/api/user', UserRoutes)
 

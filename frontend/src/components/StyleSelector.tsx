@@ -19,17 +19,17 @@ export default function StyleSelector({value, onChange, isOpen, setIsOpen}: {
       description: 'Simple layouts, lots of whitespace, clean aesthetics',
     },
     {
-      label: 'Cinematic' as ThumbnailStyle,
+      label: 'Photorealistic' as ThumbnailStyle,
       icon: <ImageIcon className="w-4 h-4 mr-2" />,
       description: 'Dramatic visuals, widescreen vibes, storytelling style',
     },
     {
-      label: 'Illustrative' as ThumbnailStyle,
+      label: 'Illustrated' as ThumbnailStyle,
       icon: <PenToolIcon className="w-4 h-4 mr-2" />,
       description: 'Hand-drawn or vector illustrations, artistic flair',
     },
     {
-      label: 'Modern Tech' as ThumbnailStyle,
+      label: 'Tech/Futuristic' as ThumbnailStyle,
       icon: <CpuIcon className="w-4 h-4 mr-2" />,
       description: 'Futuristic designs, sleek interfaces, tech-inspired',
     },
